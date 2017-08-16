@@ -11,7 +11,8 @@ constructor(props){
 };
 
 removeTask(){
-  this.props.removeTask(this.props.name)
+  this.props.removeTask(this.props.taskDescription)
+  console.log('remove ' + this.props.taskDescription)
 }
 
 handleClick(){
@@ -21,8 +22,7 @@ handleClick(){
   render(){
     return(
       <div className = 'Task'>
-      {this.props.tasktitle}
-      {this.props.name}
+      {this.props.taskDescription}
       <br/>
       <button className='btn' onClick = {() => this.handleClick()} > 
       {this.state.due} 

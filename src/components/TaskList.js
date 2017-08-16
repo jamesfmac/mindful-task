@@ -1,43 +1,63 @@
 import React, { Component } from 'react';
 import '../styles/TaskList.css';
 import Task from './Task.js'
-import AddTask from'./AddTask.js'
+import AddTaskForm from './AddTaskForm.js'
+import SearchBar from './SearchBar.js'
 
 class TaskList extends Component{
 
   constructor(props){
     super(props);
-    this.state = {name: ['james', 'lex', 'fred']}
+    this.state = {tasks: [ {taskDescription: 'Items 1', taskUrgency: false ,taskImportance: false},
+    {taskDescription: 'Items 2', taskUrgency: false ,taskImportance: false},
+    ],
+    immediateOnly:false,
+
+    }
+
+
+
     this.addTask = this.addTask.bind(this);
     this.removeTask = this.removeTask.bind(this);
+    this.handleImmediateOnly = this.handleImmediateOnly.bind(this);
     
   };
 
   addTask(newTask){
     console.log('newTask is ' + newTask)
-    this.setState ({name: [...this.state.name, newTask] });
+    this.setState ({tasks: [...this.state.tasks, newTask] });
   }
 
   removeTask(removeTask){
-    const filteredTasks = this.state.name.filter(name => {
-      return name !== removeTask;
+    const filteredTasks = this.state.tasks.filter(tasks => {
+      return tasks.taskDescription !== removeTask;
     });
-    this.setState ({name: filteredTasks});
+    this.setState ({tasks: filteredTasks});
   }
-
+handleImmediateOnly(immediateOnly){
+  console.log ('im =' + immediateOnly)
+  this.setState ({immediateOnly:immediateOnly});
+}
 
 
 
   renderTasks (){
-    return this.state.name.map(name =>(
-      <Task key = {name} name = {name} removeTask = {this.removeTask} />));
+    let filteredTasks = this.state.tasks
+    if (this.state.immediateOnly){
+      filteredTasks = this.state.tasks.filter(tasks=>{
+        return tasks.taskImportance && tasks.taskUrgency
+      })
+    }
+    return filteredTasks.map(tasks =>(
+      <Task key = {tasks.taskDescription} taskDescription = {tasks.taskDescription} removeTask = {this.removeTask} />));
   }
 
 
   render(){
     return(
       <div className = 'TaskList'>
-      <AddTask addTask= {this.addTask} />
+      <AddTaskForm addTask = {this.addTask}/>
+      <SearchBar immediateOnly = {this.state.immediateOnly} handleImmediateOnly = {this.handleImmediateOnly}/>
       {this.renderTasks()}
       
        </div>
